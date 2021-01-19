@@ -10,8 +10,8 @@ function notesApi(app) {
     router.get("/", async function(req, res, next) {
 
         try {
-            const tags = req.query.tags;
-            const notes = await notesService.getNotes(tags);
+            const { tags } = req.query;
+            const notes = await notesService.getNotes({ tags });
 
             res.status(200).json({
                 data:notes,
@@ -29,8 +29,8 @@ function notesApi(app) {
 
         try {
 
-            const noteId = req.params.id;
-            const retrievedNote = await notesService.getNote(noteId);
+            const { id } = req.params;
+            const retrievedNote = await notesService.getNote({ id });
 
             res.status(200).json({
                 data:retrievedNote,
@@ -47,8 +47,8 @@ function notesApi(app) {
     router.post("/", async function(req, res, next) {
 
         try {
-            const note = req.body;
-            const createdNote = await notesService.createNote(note);
+            const { body: note } = req;
+            const createdNote = await notesService.createNote({ note });
 
             res.status(200).json({
                 data: createdNote,
@@ -65,10 +65,10 @@ function notesApi(app) {
     router.patch("/:id", async function(req, res, next) {
 
         try {
-            const noteId = req.params.id;
-            const note = req.body;
+            const { id } = req.params;
+            const { body: note} = req;
 
-            const updatedNote = await notesService.updateNote(noteId, note);
+            const updatedNote = await notesService.updateNote({ id, note });
 
             res.status(200).json({
                 data:updatedNote,
@@ -85,8 +85,8 @@ function notesApi(app) {
     router.delete("/:id", async function(req, res, next) {
 
         try {
-            const noteId = req.params.id;
-            const deletedNoteId = await notesService.deleteNote(noteId);
+            const { id } = req.params;
+            const deletedNoteId = await notesService.deleteNote({ id });
 
             res.status(200).json({
                 data:deletedNoteId,
