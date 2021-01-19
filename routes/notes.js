@@ -10,8 +10,8 @@ function notesApi(app) {
     router.get("/", async function(req, res, next) {
 
         try {
-            const { tags } = req.query;
-            const notes = await notesService.getNotes({ tags });
+            const tags = req.query.tags;
+            const notes = await notesService.getNotes(tags);
 
             res.status(200).json({
                 data:notes,
@@ -29,8 +29,8 @@ function notesApi(app) {
 
         try {
 
-            const { id } = req.params;
-            const retrievedNote = await notesService.getNote({ id });
+            const noteId = req.params.id;
+            const retrievedNote = await notesService.getNote(noteId);
 
             res.status(200).json({
                 data:retrievedNote,
@@ -47,8 +47,8 @@ function notesApi(app) {
     router.post("/", async function(req, res, next) {
 
         try {
-            const { body: note } = req
-            const createdNote = await notesService.createNote({ note });
+            const note = req.body;
+            const createdNote = await notesService.createNote(note);
 
             res.status(200).json({
                 data: createdNote,
@@ -65,10 +65,10 @@ function notesApi(app) {
     router.patch("/:id", async function(req, res, next) {
 
         try {
-            const { id } = req.params;
-            const { body: note } = req
+            const noteId = req.params.id;
+            const note = req.body;
 
-            const updatedNote = await notesService.updateNote({ id, note });
+            const updatedNote = await notesService.updateNote(noteId, note);
 
             res.status(200).json({
                 data:updatedNote,
@@ -85,12 +85,29 @@ function notesApi(app) {
     router.delete("/:id", async function(req, res, next) {
 
         try {
-            const { id } = req.params;
-            const deletedNoteId = await notesService.deleteNote({ id });
+            const noteId = req.params.id;
+            const deletedNoteId = await notesService.deleteNote(noteId);
 
             res.status(200).json({
                 data:deletedNoteId,
                 message: 'note deleted'
+            });
+
+        } catch(err){
+            next(err);
+        }
+
+    });
+
+    //Delete all notes
+    router.delete("/", async function(req, res, next) {
+
+        try {
+            const allDeleted = await notesService.deleteAllNotes();
+
+            res.status(200).json({
+                data: allDeleted,
+                message: 'all notes deleted'
             });
 
         } catch(err){

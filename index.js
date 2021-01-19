@@ -11,6 +11,10 @@ app.get("/", function(req, res) {
 });
 
 const notesApi = require ("./routes/notes.js")
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
 notesApi(app);
 
 app.listen(config.port, function() {
